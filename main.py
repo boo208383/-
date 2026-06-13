@@ -6,6 +6,8 @@ st.set_page_config(
     layout="centered"
 )
 
+# ---------------- CSS ----------------
+
 st.markdown("""
 <style>
 
@@ -29,27 +31,19 @@ st.markdown("""
     margin-bottom:25px;
 }
 
-.pokemon-card{
-
-    position:relative;
-    overflow:hidden;
-
-    max-width:480px;
-    margin:30px auto;
+.card{
+    background: linear-gradient(
+        135deg,
+        #ffd700 0%,
+        #fff5a3 20%,
+        #ffffff 50%,
+        #fff2a6 80%,
+        #ffd700 100%
+    );
 
     padding:25px;
 
     border-radius:30px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #ffd700 0%,
-            #fff5a3 20%,
-            #ffffff 50%,
-            #fff2a6 80%,
-            #ffd700 100%
-        );
 
     border:8px solid #ffcb05;
 
@@ -59,40 +53,36 @@ st.markdown("""
 
     text-align:center;
 
-    animation:
-        floatCard 3s ease-in-out infinite;
+    margin-top:20px;
 }
 
-.pokemon-card::before{
-
-    content:"";
-
-    position:absolute;
-
-    top:-120%;
-    left:-50%;
-
-    width:60%;
-    height:350%;
-
-    background:
-        rgba(255,255,255,0.4);
-
-    transform:rotate(25deg);
-
-    animation:
-        shine 3s linear infinite;
+.name{
+    text-align:center;
+    font-size:2rem;
+    font-weight:bold;
 }
 
-@keyframes shine{
+.desc{
+    text-align:center;
+    font-size:1.1rem;
+}
 
-    from{
-        left:-70%;
-    }
+.rarity{
+    text-align:center;
+    color:#ff9900;
+    font-size:1.3rem;
+    font-weight:bold;
+}
 
-    to{
-        left:140%;
-    }
+.footer{
+    text-align:center;
+    color:gray;
+    margin-top:20px;
+}
+
+img{
+    border-radius:20px;
+    animation: floatCard 3s ease-in-out infinite;
 }
 
 @keyframes floatCard{
@@ -116,38 +106,10 @@ st.markdown("""
     }
 }
 
-.pokemon-img{
-    width:280px;
-    border-radius:20px;
-}
-
-.pokemon-name{
-    font-size:2.2rem;
-    font-weight:bold;
-    margin-top:10px;
-}
-
-.rarity{
-    color:#ff9900;
-    font-size:1.4rem;
-    font-weight:bold;
-}
-
-.quote{
-    background:white;
-    padding:12px;
-    border-radius:15px;
-    margin-top:15px;
-}
-
-.footer{
-    text-align:center;
-    color:gray;
-    margin-top:25px;
-}
-
 </style>
 """, unsafe_allow_html=True)
+
+# ---------------- 제목 ----------------
 
 st.markdown(
     '<div class="title">⚡ MBTI 포켓몬 카드 ⚡</div>',
@@ -158,6 +120,8 @@ st.markdown(
     '<div class="subtitle">내 MBTI와 가장 닮은 포켓몬은 누구일까? 🎮</div>',
     unsafe_allow_html=True
 )
+
+# ---------------- 데이터 ----------------
 
 pokemon_data = {
 
@@ -274,10 +238,14 @@ pokemon_data = {
     }
 }
 
+# ---------------- 선택 ----------------
+
 mbti = st.selectbox(
     "🎯 MBTI를 선택하세요!",
     list(pokemon_data.keys())
 )
+
+# ---------------- 결과 ----------------
 
 if st.button("🎴 내 포켓몬 카드 뽑기!", use_container_width=True):
 
@@ -285,47 +253,41 @@ if st.button("🎴 내 포켓몬 카드 뽑기!", use_container_width=True):
 
     p = pokemon_data[mbti]
 
-    st.markdown(
-        f"""
-        <div class="pokemon-card">
+    col1, col2, col3 = st.columns([1,4,1])
 
-            <img
-                class="pokemon-img"
-                src="{p['image']}"
-            >
+    with col2:
 
-            <div class="pokemon-name">
-                {p['emoji']} {p['name']}
-            </div>
+        st.markdown('<div class="card">', unsafe_allow_html=True)
 
-            <h3>✨ {mbti} 타입의 대표 포켓몬 ✨</h3>
+        st.image(
+            p["image"],
+            use_container_width=True
+        )
 
-            <p>
-                {p['desc']}
-            </p>
+        st.markdown(
+            f'<div class="name">{p["emoji"]} {p["name"]}</div>',
+            unsafe_allow_html=True
+        )
 
-            <hr>
+        st.markdown(
+            f'<div class="desc"><br>✨ {mbti} 타입의 대표 포켓몬 ✨<br><br>{p["desc"]}</div>',
+            unsafe_allow_html=True
+        )
 
-            <div class="rarity">
-                🌟 희귀도 ★★★★★
-            </div>
+        st.markdown("---")
 
-            <br>
+        st.markdown(
+            '<div class="rarity">🌟 희귀도 ★★★★★</div>',
+            unsafe_allow_html=True
+        )
 
-            ⚔️ 특성 : 개성 만렙
+        st.success("⚔️ 특성 : 개성 만렙")
 
-            <div class="quote">
-                🎮 오늘의 한마디<br>
-                <b>
-                자신만의 매력을 믿고
-                모험을 떠나자!
-                </b>
-            </div>
+        st.info(
+            "🎮 오늘의 한마디\n\n자신만의 매력을 믿고 모험을 떠나자!"
+        )
 
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+        st.markdown('</div>', unsafe_allow_html=True)
 
 st.markdown(
     '<div class="footer">⚡ Pokémon MBTI Card Generator 🎈</div>',
